@@ -1,44 +1,35 @@
-import React from "react";
 // import logo from './logo.svg';
-import { makeStyles } from "@material-ui/core/styles";
-
+import React, { useState } from "react";
 import "./App.css";
-import Header from './components/header/Header';
-import Footer from './components/footer/Footer';
-import Lists from './components/lists/Lists';
+import Form from './components/form/Form';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginRight: theme.spacing(2)
-  },
-  title: {
-    flexGrow: 1
-  },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(9),
-    right: theme.spacing(3)
-  },
-  bottomNavigation: {
-    width: "100%",
-    position: "fixed",
-    bottom: 0
-  }
-}));
 
 function App() {
-  const classes = useStyles();
-  
+  const [todos, setTodos] = useState([]);
+
+  const toggleComplete = (i) => {
+    setTodos(
+      todos.map((todo, k) => k=== i ? {
+        ...todo,
+        complete: !todo.complete
+      } : todo)
+    )
+  }
   return (
     // define app structure then break into individual components
-    <div>
-      <Header classes={classes} />
-      <Lists classes={classes} />
-      <Footer classes={classes} />
-    </div>
+      <div className="App">
+        <Form
+          onSubmit={text => setTodos([{ text, complete: false }, ...todos])}
+        />
+        <div>
+          {todos.map(({ text, complete }, i) => (
+            <div key={Math.random()} onClick={() => toggleComplete(i)} style={{
+              textDecoration: complete ? 'line-through' : ''
+            }}>{text}</div>
+          ))}
+        </div>
+        <button onClick={()=> setTodos([])}>Reset</button>
+      </div>
   );
 }
 
